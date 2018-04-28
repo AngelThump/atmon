@@ -1,0 +1,135 @@
+{
+	"type": "record",
+	"name": "event",
+	"fields": [
+		{
+			"name": "header",
+			"type": {
+				"type": "record",
+				"name": "Header",
+				"fields": [
+					{
+						"name": "ClientID",
+						"type": "long"
+					},
+					{
+						"name": "Source",
+						"type": "string"
+					},
+					{
+						"name": "Scale",
+						"type": "float"
+					},
+					{
+						"name": "Channel",
+						"type": "string"
+					},
+					{
+						"name": "Type",
+						"type": "string"
+					},
+					{
+						"name": "Sent",
+						"type": "long"
+					}
+				]
+			}
+		},
+		{
+			"name": "BufferTime",
+			"type": [
+				"null",
+				{
+					"type": "record",
+					"name": "BufferTime",
+					"fields": [
+						{
+							"name": "Start",
+							"type": "long"
+						},
+						{
+							"name": "Cancelled",
+							"type": "boolean"
+						},
+						{
+							"name": "Waiting",
+							"type": "int"
+						},
+						{
+							"name": "LoadStart",
+							"type": "int"
+						},
+						{
+							"name": "LoadedMetadata",
+							"type": "int"
+						},
+						{
+							"name": "LoadedData",
+							"type": "int"
+						},
+						{
+							"name": "CanPlay",
+							"type": "int"
+						},
+						{
+							"name": "Playing",
+							"type": "int"
+						},
+						{
+							"name": "CanPlayThrough",
+							"type": "int"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "ResourceTime",
+			"type": [
+				"null",
+				{
+					"type": "record",
+					"name": "ResourceTime",
+					"fields": [
+						{
+							"name": "Host",
+							"type": "string"
+						},
+						{
+							"name": "Chunk",
+							"type": "int"
+						},
+						{
+							"name": "Redirect",
+							"type": "int"
+						},
+						{
+							"name": "DNS",
+							"type": "int"
+						},
+						{
+							"name": "Connect",
+							"type": "int"
+						},
+						{
+							"name": "Send",
+							"type": "int"
+						},
+						{
+							"name": "Receive",
+							"type": "int"
+						},
+						{
+							"name": "Total",
+							"type": "int"
+						},
+						{
+							"name": "Size",
+							"type": "int"
+						}
+					]
+				}
+			]
+		}
+	]
+}
