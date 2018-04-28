@@ -45,17 +45,13 @@ func main() {
 			return
 		}
 
-		var clientReport ClientReport
-		err := json.NewDecoder(req.Body).Decode(&clientReport)
+		report := NewReport()
+		err := json.NewDecoder(req.Body).Decode(report.ClientReport)
 		if err != nil {
 			http.Error(res, `{"error":"bad request"}`, http.StatusBadRequest)
 			return
 		}
 		defer req.Body.Close()
-
-		report := Report{
-			ClientReport: &clientReport,
-		}
 
 		if ip := req.Header.Get(ipHeader); ip != "" {
 			if network, city, err := geoIPDB.Lookup(ip); err == nil {
@@ -64,7 +60,7 @@ func main() {
 			}
 		}
 
-		logger.WriteReport(&report)
+		logger.WriteReport(report)
 
 		res.WriteHeader(http.StatusOK)
 		res.Write([]byte(`{}`))

@@ -31,6 +31,8 @@ func (l *EventWriter) Flush() error {
 func (l *EventWriter) writeBufferEvents(report *Report, events []BufferEvent) {
 	for _, e := range events {
 		err := l.w.WriteRecord(&avro.Event{
+			Date:   report.Date,
+			Time:   report.Time,
 			Header: &e.Header,
 			BufferTime: avro.UnionNullBufferTime{
 				BufferTime: &e.BufferTime,
@@ -48,6 +50,8 @@ func (l *EventWriter) writeBufferEvents(report *Report, events []BufferEvent) {
 func (l *EventWriter) writeResourceEvents(report *Report, events []ResourceEvent) {
 	for _, e := range events {
 		err := l.w.WriteRecord(&avro.Event{
+			Date:   report.Date,
+			Time:   report.Time,
 			Header: &e.Header,
 			ResourceTime: avro.UnionNullResourceTime{
 				ResourceTime: &e.ResourceTime,

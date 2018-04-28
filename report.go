@@ -1,6 +1,13 @@
 package main
 
-import "github.com/slugalisk/atmon/avro"
+import (
+	"time"
+
+	"github.com/slugalisk/atmon/avro"
+)
+
+// SecondsPerDay ...
+const SecondsPerDay int64 = 86400
 
 // BufferEvent ...
 type BufferEvent struct {
@@ -24,7 +31,20 @@ type ClientReport struct {
 
 // Report ...
 type Report struct {
+	Date int32
+	Time int64
 	*ClientReport
 	Network avro.UnionNullNetwork
 	Geo     avro.UnionNullGeo
+}
+
+// NewReport ...
+func NewReport() *Report {
+	now := time.Now().Unix()
+
+	return &Report{
+		Date:         int32(now / SecondsPerDay),
+		Time:         now,
+		ClientReport: &ClientReport{},
+	}
 }

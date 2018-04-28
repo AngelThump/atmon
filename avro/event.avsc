@@ -3,6 +3,14 @@
 	"name": "event",
 	"fields": [
 		{
+			"name": "Date",
+			"type": "int"
+		},
+		{
+			"name": "Time",
+			"type": "long"
+		},
+		{
 			"name": "Header",
 			"type": {
 				"type": "record",
@@ -49,6 +57,10 @@
 						},
 						{
 							"name": "Cancelled",
+							"type": "boolean"
+						},
+						{
+							"name": "Active",
 							"type": "boolean"
 						},
 						{
