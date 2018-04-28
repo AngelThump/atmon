@@ -29,11 +29,11 @@ func (c *BigQueryWriterConfig) InitFlags() {
 // BigQueryWriter ...
 type BigQueryWriter struct {
 	client *bigquery.Client
-	config *BigQueryWriterConfig
+	config BigQueryWriterConfig
 }
 
 // NewBigQueryWriter ..
-func NewBigQueryWriter(config *BigQueryWriterConfig) (*BigQueryWriter, error) {
+func NewBigQueryWriter(config BigQueryWriterConfig) (*BigQueryWriter, error) {
 	client, err := bigquery.NewClient(
 		context.Background(),
 		config.ProjectID,

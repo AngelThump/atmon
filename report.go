@@ -21,3 +21,10 @@ type ClientReport struct {
 	Waiting  []BufferEvent
 	Resource []ResourceEvent
 }
+
+// Report ...
+type Report struct {
+	*ClientReport
+	Network avro.UnionNullNetwork
+	Geo     avro.UnionNullGeo
+}

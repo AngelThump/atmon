@@ -11,19 +11,28 @@ import (
 )
 
 var bigQueryWriterConfig BigQueryWriterConfig
+var geoIPDBConfig GeoIPDBConfig
 var httpAddress string
+var ipHeader string
 
 func init() {
 	bigQueryWriterConfig.InitFlags()
+	geoIPDBConfig.InitFlags()
 	flag.StringVar(&httpAddress, "http-addr", ":80", "http server address")
+	flag.StringVar(&ipHeader, "ip-header", "X-Client-IP", "http header with client ip")
 }
 
 func main() {
 	flag.Parse()
 
-	bigQueryWriter, err := NewBigQueryWriter(&bigQueryWriterConfig)
+	bigQueryWriter, err := NewBigQueryWriter(bigQueryWriterConfig)
 	if err != nil {
 		log.Fatal("error starting bq client", err)
+	}
+
+	geoIPDB, err := NewGeoIPDB(geoIPDBConfig)
+	if err != nil {
+		log.Fatal("error initializing geoip db", err)
 	}
 
 	logger := NewLogger(bigQueryWriter)
@@ -36,15 +45,26 @@ func main() {
 			return
 		}
 
-		var report ClientReport
-		err := json.NewDecoder(req.Body).Decode(&report)
+		var clientReport ClientReport
+		err := json.NewDecoder(req.Body).Decode(&clientReport)
 		if err != nil {
 			http.Error(res, `{"error":"bad request"}`, http.StatusBadRequest)
 			return
 		}
 		defer req.Body.Close()
 
-		logger.WriteClientReport(&report)
+		report := Report{
+			ClientReport: &clientReport,
+		}
+
+		if ip := req.Header.Get(ipHeader); ip != "" {
+			if network, city, err := geoIPDB.Lookup(ip); err == nil {
+				report.Network = network.AvroNetwork()
+				report.Geo = city.AvroGeo()
+			}
+		}
+
+		logger.WriteReport(&report)
 
 		res.WriteHeader(http.StatusOK)
 		res.Write([]byte(`{}`))

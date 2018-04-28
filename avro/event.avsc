@@ -3,7 +3,7 @@
 	"name": "event",
 	"fields": [
 		{
-			"name": "header",
+			"name": "Header",
 			"type": {
 				"type": "record",
 				"name": "Header",
@@ -126,6 +126,94 @@
 						{
 							"name": "Size",
 							"type": "int"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Network",
+			"type": [
+				"null",
+				{
+					"type": "record",
+					"name": "Network",
+					"fields": [
+						{
+							"name": "ASN",
+							"type": "int"
+						},
+						{
+							"name": "Organization",
+							"type": "string"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Geo",
+			"type": [
+				"null",
+				{
+					"type": "record",
+					"name": "Geo",
+					"fields": [
+						{
+							"name": "SubdivisionID",
+							"type": "int"
+						},
+						{
+							"name": "SubdivisionISO",
+							"type": "string"
+						},
+						{
+							"name": "SubdivisionName",
+							"type": "string"
+						},
+						{
+							"name": "CityID",
+							"type": "int"
+						},
+						{
+							"name": "CityName",
+							"type": "string"
+						},
+						{
+							"name": "ContinentID",
+							"type": "int"
+						},
+						{
+							"name": "ContinentCode",
+							"type": "string"
+						},
+						{
+							"name": "ContinentName",
+							"type": "string"
+						},
+						{
+							"name": "CountryID",
+							"type": "int"
+						},
+						{
+							"name": "CountryISO",
+							"type": "string"
+						},
+						{
+							"name": "CountryName",
+							"type": "string"
+						},
+						{
+							"name": "IsInEuropeanUnion",
+							"type": "boolean"
+						},
+						{
+							"name": "IsAnonymousProxy",
+							"type": "boolean"
+						},
+						{
+							"name": "IsSatelliteProvider",
+							"type": "boolean"
 						}
 					]
 				}

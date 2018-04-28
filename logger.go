@@ -11,16 +11,19 @@ const (
 	LogSizeLimit = 9 * 1014 * 1024
 
 	// LogAgeLimit limit log staleness
-	LogAgeLimit = 1 * time.Minute
+	LogAgeLimit = 10 * time.Minute
 
 	// ReportBufferSize maximum unprocessed reports
 	ReportBufferSize = 128
+
+	// RecordsPerAvroBlock ...
+	RecordsPerAvroBlock = 100
 )
 
 // Logger ...
 type Logger struct {
 	writer  *BigQueryWriter
-	reports chan *ClientReport
+	reports chan *Report
 	buffers chan *bytes.Buffer
 }
 
@@ -28,7 +31,7 @@ type Logger struct {
 func NewLogger(writer *BigQueryWriter) *Logger {
 	l := &Logger{
 		writer:  writer,
-		reports: make(chan *ClientReport, ReportBufferSize),
+		reports: make(chan *Report, ReportBufferSize),
 		buffers: make(chan *bytes.Buffer, 1),
 	}
 
@@ -55,7 +58,7 @@ func (l *Logger) doBufferLoop() {
 	lastFlush := time.Now()
 	for {
 		report := <-l.reports
-		writer.WriteClientReport(report)
+		writer.WriteReport(report)
 
 		if buf.Len() > LogSizeLimit || (time.Since(lastFlush) > LogAgeLimit && buf.Len() > 0) {
 			writer.Flush()
@@ -69,15 +72,15 @@ func (l *Logger) doBufferLoop() {
 
 func (l *Logger) initBuffer() (*bytes.Buffer, *EventWriter) {
 	buf := bytes.Buffer{}
-	writer, err := NewEventWriter(&buf)
+	writer, err := NewEventWriter(&buf, RecordsPerAvroBlock)
 	if err != nil {
 		log.Fatal("error initializing buffer", err)
 	}
 	return &buf, writer
 }
 
-// WriteClientReport ...
-func (l *Logger) WriteClientReport(report *ClientReport) {
+// WriteReport ...
+func (l *Logger) WriteReport(report *Report) {
 	log.Printf(
 		"received %d events (Play: %d, Stalled: %d, Waiting: %d, Resource: %d)",
 		len(report.Play)+len(report.Stalled)+len(report.Waiting)+len(report.Resource),
