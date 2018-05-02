@@ -40,11 +40,6 @@ func main() {
 	handleReport := func(res http.ResponseWriter, req *http.Request) {
 		res.Header().Add("Content-Type", "application/json")
 
-		if req.Method != http.MethodPost {
-			http.Error(res, `{"error":"method not allowed"}`, http.StatusMethodNotAllowed)
-			return
-		}
-
 		report := NewReport()
 		err := json.NewDecoder(req.Body).Decode(report.ClientReport)
 		if err != nil {
@@ -69,7 +64,11 @@ func main() {
 	router := mux.NewRouter()
 	router.HandleFunc("/api/v1/report", handleReport).Methods("POST")
 
-	corsMiddleware := handlers.CORS(handlers.AllowedOrigins([]string{"*"}))
+	corsHeaders := handlers.AllowedHeaders([]string{"Content-Type", "Origin"})
+	corsMaxAge := handlers.MaxAge(86400)
+	corsOrigins := handlers.AllowedOrigins([]string{"*"})
+	corsMethods := handlers.AllowedMethods([]string{"GET", "OPTIONS"})
+	corsMiddleware := handlers.CORS(corsHeaders, corsMaxAge, corsOrigins, corsMethods)
 
 	log.Fatal(http.ListenAndServe(httpAddress, corsMiddleware(router)))
 }

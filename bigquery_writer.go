@@ -70,7 +70,7 @@ func (w *BigQueryWriter) Write(b io.Reader) error {
 
 	stats := status.Statistics.Details.(*bigquery.LoadStatistics)
 	log.Printf(
-		"finished loading data intto bigquery (TotalBytesProcessed: %d, InputFileBytes: %d, OutputBytes: %d, OutputRows: %d)",
+		"finished loading data into bigquery (TotalBytesProcessed: %d, InputFileBytes: %d, OutputBytes: %d, OutputRows: %d)",
 		status.Statistics.TotalBytesProcessed,
 		stats.InputFileBytes,
 		stats.OutputBytes,
