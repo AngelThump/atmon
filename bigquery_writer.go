@@ -3,8 +3,10 @@ package main
 import (
 	"context"
 	"flag"
+	"fmt"
 	"io"
 	"log"
+	"time"
 
 	"cloud.google.com/go/bigquery"
 	"google.golang.org/api/option"
@@ -52,7 +54,8 @@ func (w *BigQueryWriter) Write(b io.Reader) error {
 	source.AllowJaggedRows = true
 	source.SourceFormat = bigquery.Avro
 
-	loader := w.client.Dataset(w.config.DatasetID).Table(w.config.TableID).LoaderFrom(source)
+	tableID := fmt.Sprintf("%s_%s", w.config.TableID, time.Now().UTC().Format("20060102"))
+	loader := w.client.Dataset(w.config.DatasetID).Table(tableID).LoaderFrom(source)
 	loader.CreateDisposition = bigquery.CreateIfNeeded
 	loader.WriteDisposition = bigquery.WriteAppend
 
